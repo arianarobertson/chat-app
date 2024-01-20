@@ -36,18 +36,35 @@ const Start = ({ navigation }) => {
 
                     <View style={styles.colorButtonsContainer}>
                         <TouchableOpacity
+                            // Adds accessibility features
+                            accessible={true}
+                            accessibilityLabel="More options"
+                            accessibilityHint="Lets you choose to send an image or your geolocation."
+                            accessibilityRole="button"
                             style={[styles.colorButton, { backgroundColor: '#090C08' }]}
                             onPress={() => handleColorSelection('#090C08')}
                         />
                         <TouchableOpacity
+                            accessible={true}
+                            accessibilityLabel="More options"
+                            accessibilityHint="Lets you choose to send an image or your geolocation."
+                            accessibilityRole="button"
                             style={[styles.colorButton, { backgroundColor: '#474056' }]}
                             onPress={() => handleColorSelection('#474056')}
                         />
                         <TouchableOpacity
+                            accessible={true}
+                            accessibilityLabel="More options"
+                            accessibilityHint="Lets you choose to send an image or your geolocation."
+                            accessibilityRole="button"
                             style={[styles.colorButton, { backgroundColor: '#8A95A5' }]}
                             onPress={() => handleColorSelection('#8A95A5')}
                         />
                         <TouchableOpacity
+                            accessible={true}
+                            accessibilityLabel="More options"
+                            accessibilityHint="Lets you choose to send an image or your geolocation."
+                            accessibilityRole="button"
                             style={[styles.colorButton, { backgroundColor: '#B9C6AE' }]}
                             onPress={() => handleColorSelection('#B9C6AE')}
                         />
