@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { ImageBackground, StyleSheet, View, Text, TextInput, Button, Image, TouchableOpacity } from 'react-native';
+import { useState } from 'react';
+import { ImageBackground, StyleSheet, View, Text, TextInput, Button, Image, TouchableOpacity, Alert } from 'react-native';
+import { getAuth, signInAnonymously } from 'firebase/auth';
 
 const Start = ({ navigation }) => {
     const [name, setName] = useState('');
@@ -7,13 +8,37 @@ const Start = ({ navigation }) => {
     const image = require('../img/Background_Image.png');
     const icon = require('../img/icon.svg');
 
+    const auth = getAuth();
+
+    const signInUser = () => {
+        signInAnonymously(auth)
+            .then((result) => {
+                // Ensure user is authenticated before navigating
+                if (result.user) {
+                    navigation.navigate("Chat", {
+                        userID: result.user.uid,
+                        user: user,
+                        background: '#757083',
+                    });
+                    Alert.alert("Signed In Successfully!");
+                } else {
+                    Alert.alert("Authentication failed.");
+                }
+            })
+            .catch((error) => {
+                Alert.alert("Unable to sign in, try again later.");
+            });
+    };
+
+    const [user, setUser] = useState("");
+
     const handleColorSelection = (color) => {
         setSelectedColor(color);
     };
 
-    const handleStartChatting = () => {
-        navigation.navigate('Chat', { name, backgroundColor: selectedColor });
-    };
+    //const handleStartChatting = () => {
+    // navigation.navigate('Chat', { name, backgroundColor: selectedColor });
+    //};
 
     return (
         <View style={styles.container}>
@@ -25,9 +50,9 @@ const Start = ({ navigation }) => {
                         <Image source={icon} style={styles.icon} />
                         <TextInput
                             style={styles.textInput}
-                            value={name}
-                            onChangeText={setName}
-                            placeholder="Your name"
+                            value={user}
+                            onChangeText={setUser}
+                            placeholder="Your username"
                             placeholderTextColor="#757083"
                         />
                     </View>
@@ -72,7 +97,7 @@ const Start = ({ navigation }) => {
 
                     <Button
                         title="Start Chatting"
-                        onPress={handleStartChatting}
+                        onPress={signInUser}
                         style={styles.buttonStartChatting}
                         color="#757083"
                     />
@@ -114,7 +139,7 @@ const styles = StyleSheet.create({
     text: {
         padding: '25%',
         flex: 6,
-        fontFamily: 'serif',
+        // fontFamily: 'serif',
         fontSize: 45,
         fontWeight: '600',
         color: 'white',
