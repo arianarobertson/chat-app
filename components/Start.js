@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react';
 import { ImageBackground, StyleSheet, View, Text, TextInput, Button, Image, TouchableOpacity, Alert } from 'react-native';
 import { getAuth, signInAnonymously } from 'firebase/auth';

@@ -10,13 +10,29 @@ import { LogBox } from 'react-native';
 
 // connect Firebase Databases
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, disableNetwork, enableNetwork } from "firebase/firestore";
+
+import { useNetInfo } from '@react-native-community/netinfo';
+import { useEffect } from "react";
+import { Alert } from "react-native";
 
 // Create the navigator
 const Stack = createNativeStackNavigator();
 
+LogBox.ignoreLogs(["AsyncStorage has been extracted from"]);
+
 const App = () => {
-  LogBox.ignoreLogs(["AsyncStorage has been extracted from"]);
+  const connectionStatus = useNetInfo();
+
+  useEffect(() => {
+    if (connectionStatus.isConnected === false) {
+      Alert.alert("Connection Lost!");
+      disableNetwork(db);
+    } else if (connectionStatus.isConnected === true) {
+      enableNetwork(db);
+    }
+  }, [connectionStatus.isConnected]);
+
 
   // Your web app's Firebase configuration
   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -45,11 +61,14 @@ const App = () => {
           name="Start"
           component={Start}
         />
-        <Stack.Screen
-          name="Chat"
-          options={({ route }) => ({ title: route.params.name })}
-        >
-          {(props) => <Chat {...props} db={db} />}
+        <Stack.Screen name="Chat">
+          {(props) => (
+            <Chat
+              db={db}
+              isConnected={connectionStatus.isConnected}
+              {...props}
+            />
+          )}
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
