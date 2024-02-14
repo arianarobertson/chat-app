@@ -11,6 +11,8 @@ const Start = ({ navigation }) => {
 
     const auth = getAuth();
 
+    // Signing in the user to the chat room using firebase/auth
+
     const signInUser = () => {
         signInAnonymously(auth)
             .then((result) => {
@@ -19,7 +21,7 @@ const Start = ({ navigation }) => {
                     navigation.navigate("Chat", {
                         userID: result.user.uid,
                         user: user,
-                        background: '#757083',
+                        backgroundColor: selectedColor,
                     });
                     Alert.alert("Signed In Successfully!");
                 } else {
@@ -37,9 +39,7 @@ const Start = ({ navigation }) => {
         setSelectedColor(color);
     };
 
-    //const handleStartChatting = () => {
-    // navigation.navigate('Chat', { name, backgroundColor: selectedColor });
-    //};
+    // Allows the user to choose a color for the background of their chat and input their name to appear in the chat room. Passes the name and color choices as props to components
 
     return (
         <View style={styles.container}>
@@ -64,32 +64,32 @@ const Start = ({ navigation }) => {
                         <TouchableOpacity
                             // Adds accessibility features
                             accessible={true}
-                            accessibilityLabel="More options"
-                            accessibilityHint="Lets you choose to send an image or your geolocation."
+                            accessibilityLabel="Choose your background color"
+                            accessibilityHint="Lets you choose from five different colors for your screen."
                             accessibilityRole="button"
                             style={[styles.colorButton, { backgroundColor: '#090C08' }]}
                             onPress={() => handleColorSelection('#090C08')}
                         />
                         <TouchableOpacity
                             accessible={true}
-                            accessibilityLabel="More options"
-                            accessibilityHint="Lets you choose to send an image or your geolocation."
+                            accessibilityLabel="Choose your background color"
+                            accessibilityHint="Lets you choose from five different colors for your screen."
                             accessibilityRole="button"
                             style={[styles.colorButton, { backgroundColor: '#474056' }]}
                             onPress={() => handleColorSelection('#474056')}
                         />
                         <TouchableOpacity
                             accessible={true}
-                            accessibilityLabel="More options"
-                            accessibilityHint="Lets you choose to send an image or your geolocation."
+                            accessibilityLabel="Choose your background color"
+                            accessibilityHint="Lets you choose from five different colors for your screen."
                             accessibilityRole="button"
                             style={[styles.colorButton, { backgroundColor: '#8A95A5' }]}
                             onPress={() => handleColorSelection('#8A95A5')}
                         />
                         <TouchableOpacity
                             accessible={true}
-                            accessibilityLabel="More options"
-                            accessibilityHint="Lets you choose to send an image or your geolocation."
+                            accessibilityLabel="Choose your background color"
+                            accessibilityHint="Lets you choose from five different colors for your screen."
                             accessibilityRole="button"
                             style={[styles.colorButton, { backgroundColor: '#B9C6AE' }]}
                             onPress={() => handleColorSelection('#B9C6AE')}

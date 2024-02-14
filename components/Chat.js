@@ -4,10 +4,14 @@ import { Bubble, GiftedChat, InputToolbar } from "react-native-gifted-chat";
 import { Platform, KeyboardAvoidingView } from "react-native";
 import { addDoc, collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import CustomActions from './CustomActions';
+import MapView from 'react-native-maps';
 
-const Chat = ({ route, navigation, db, isConnected }) => {
+const Chat = ({ route, navigation, db, isConnected, storage }) => {
     const { user, backgroundColor, userID } = route.params;
     const [messages, setMessages] = useState([]);
+
+    // Loads cached messages if the user is offline
 
     const loadCachedMessages = async () => {
         const cachedMessages = (await AsyncStorage.getItem('messages')) || '[]';
@@ -68,6 +72,8 @@ const Chat = ({ route, navigation, db, isConnected }) => {
         };
     }, [isConnected]);
 
+    // Caches messaged so they can be viewed when offline
+
     const cachedMessages = async (messagesToCache) => {
         try {
             await AsyncStorage.setItem('messages', JSON.stringify(messagesToCache));
@@ -76,10 +82,45 @@ const Chat = ({ route, navigation, db, isConnected }) => {
         }
     };
 
+    // Renders the toolbar so that users can send images, take pictures, and send location data in messages
+
     const renderInputToolbar = (props) => {
         if (isConnected) return <InputToolbar {...props} />;
         else return null;
     };
+
+    // Renders the custom actions of images and location for the user
+
+    const renderCustomActions = (props) => {
+        return <CustomActions storage={storage} userID={userID} {...props} />;
+    };
+
+    // Sends a message bubble containing the location data the user wants to send.
+
+    const renderCustomView = (props) => {
+        const { currentMessage } = props;
+        if (currentMessage.location) {
+            return (
+                <MapView
+                    style={{
+                        width: 150,
+                        height: 100,
+                        borderRadius: 13,
+                        margin: 3
+                    }}
+                    region={{
+                        latitude: currentMessage.location.latitude,
+                        longitude: currentMessage.location.longitude,
+                        latitudeDelta: 0.0922,
+                        longitudeDelta: 0.0421,
+                    }}
+                />
+            );
+        }
+        return null;
+    }
+
+    // Using GiftedChat renders message bubbles as well as other important components for sending more information
 
     return (
         <View style={[styles.container, { backgroundColor }]}>
@@ -87,6 +128,8 @@ const Chat = ({ route, navigation, db, isConnected }) => {
                 messages={messages}
                 renderBubble={renderBubble}
                 renderInputToolbar={renderInputToolbar}
+                renderActions={renderCustomActions}
+                renderCustomView={renderCustomView}
                 onSend={(messages) => onSend(messages)}
                 user={{
                     _id: userID,
